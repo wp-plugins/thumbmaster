@@ -19,12 +19,9 @@ Install as plugin:
 1. Upload `thumbmaster` to your `/wp-content/plugins/` directory
 2. Activate the plugin through the `Plugins` menu in WordPress
 
-
-
 Install as template addon:
 1. Upload `thumbmaster` to your template directory
 2. Place `<?php require_once TEMPLATEPATH . "/thumbmaster/thumbs.php"; ?>` in your function.php
-
 
 Admin options will appear as `Thumbnail` menu item in `Appearance` section on your Dashboard
 
