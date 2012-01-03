@@ -25,8 +25,12 @@ Install as template addon:
 
 Admin options will appear as `Thumbnail` menu item in `Appearance` section on your Dashboard
 
+== Screenshots ==
+
+1. Admin panel
+
 == Changelog ==
 
 = 0.1 =
-* Initial release
+* 2012-01-03 Initial release
 
