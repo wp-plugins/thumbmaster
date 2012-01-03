@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: thumbnails
 Requires at least: 2.9
 Tested up to: 3.3
-Stable tag: trunk
+Stable tag: 0.1
 
 Generates properly formatted post thumbnails on-the-fly for plugins and themes.
 
