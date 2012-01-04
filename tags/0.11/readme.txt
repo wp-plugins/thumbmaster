@@ -31,9 +31,9 @@ Admin options will appear as `Thumbnail` menu item in `Appearance` section on yo
 
 == Changelog ==
 
-= 0.1 =
-* 2012-01-03 Initial release
-
 = 0.11 =
 * 2012-01-04 Minor bug fixes
+
+= 0.1 =
+* 2012-01-03 Initial release
 
