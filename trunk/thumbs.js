@@ -74,11 +74,11 @@ function thumbResize(thumb) {
         if (new_width > min_width) {
             moveleft = parseInt((new_width - min_width) / 2);
             jQuery(thumb).css('left', '-' + moveleft + 'px');
-        }
+        } else jQuery(thumb).css('left', 0);
         if (new_height > min_height) {
             movetop = parseInt((new_height - min_height) / 2);
             jQuery(thumb).css('top', '-' + movetop + 'px');
-        }
+        } else jQuery(thumb).css('top', 0);
 
         jQuery(thumb).wrap('<div class="' + classes.join(' ') + '">');
         jQuery(thumb).parent().css(styles);
