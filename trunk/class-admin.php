@@ -77,7 +77,7 @@ Select Yes if you prefer extracting Youtube thumbnails from embedded videos and 
 ?>
 <input type="radio" name="tt_options[child]" value="1" <? echo $options[child] ? 'checked' : '' ?>><? _e('Yes') ?><br>
 <input type="radio" name="tt_options[child]" value="0" <? echo $options[child] ? '' : 'checked' ?>><? _e('No') ?><br>
-Select Yes if attached (children) post images should be checked first for missing thumbnails (may result slow database queries on large sites)<br>
+Select Yes if attached (children) post images should be checked for missing thumbnails (may result slow database queries on large sites)<br>
 <?
     }
     public static function options_validate($input) {
