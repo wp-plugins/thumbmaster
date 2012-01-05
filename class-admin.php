@@ -33,6 +33,10 @@ class tt_thumbs {
             'tt_thumbs',
             'option_youtube'
         ) , 'tt_thumbs_page', 'tt_main_section');
+        add_settings_field('tt_child_field', 'Check attached images', array(
+            'tt_thumbs',
+            'option_child'
+        ) , 'tt_thumbs_page', 'tt_main_section');
         
     }
     public static function section_text() {
@@ -66,6 +70,14 @@ OR leave this field blank if you do not want to use default fallback thumbnails<
 <input type="radio" name="tt_options[youtube]" value="1" <? echo $options[youtube] ? 'checked' : '' ?>><? _e('Yes') ?><br>
 <input type="radio" name="tt_options[youtube]" value="0" <? echo $options[youtube] ? '' : 'checked' ?>><? _e('No') ?><br>
 Select Yes if you prefer extracting Youtube thumbnails from embedded videos and links<br>
+<?
+    }
+    public static function option_child() {
+        $options = tt_thumbs_main::$options;
+?>
+<input type="radio" name="tt_options[child]" value="1" <? echo $options[child] ? 'checked' : '' ?>><? _e('Yes') ?><br>
+<input type="radio" name="tt_options[child]" value="0" <? echo $options[child] ? '' : 'checked' ?>><? _e('No') ?><br>
+Select Yes if attached (children) post images should be checked first for missing thumbnails (may result slow database queries on large sites)<br>
 <?
     }
     public static function options_validate($input) {

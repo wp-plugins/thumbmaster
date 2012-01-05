@@ -55,12 +55,21 @@ function thumbResize(thumb) {
             }
         }
         if (parseInt(ratio * 100) == parseInt(tratio * 100)) return false; //no resize needed
+
+        // adjust position (vertical and horizontal centering for css cropping)
+        if (new_width > min_width) moveleft = '-' + parseInt((new_width - min_width) / 2) + 'px';
+        else moveleft = 0;
+        if (new_height > min_height) movetop = '-' + parseInt((new_height - min_height) / 2) + 'px';
+        else movetop = 0;
+
         // resize thumb
         var styles = jQuery(thumb).getStyleObject();
         jQuery(thumb).removeClass().css({
             'width': new_width + 'px',
             'height': new_height + 'px',
             'position': 'absolute',
+            'left': moveleft,
+            'top': movetop,
             'margin': 0,
             'padding': 0,
             'border': 0,
@@ -69,16 +78,6 @@ function thumbResize(thumb) {
             'max-width': 'none',
             'max-height': 'none'
         });
-
-        // adjust position (vertical and horizontal centering for css cropping)
-        if (new_width > min_width) {
-            moveleft = parseInt((new_width - min_width) / 2);
-            jQuery(thumb).css('left', '-' + moveleft + 'px');
-        } else jQuery(thumb).css('left', 0);
-        if (new_height > min_height) {
-            movetop = parseInt((new_height - min_height) / 2);
-            jQuery(thumb).css('top', '-' + movetop + 'px');
-        } else jQuery(thumb).css('top', 0);
 
         jQuery(thumb).wrap('<div class="' + classes.join(' ') + '">');
         jQuery(thumb).parent().css(styles);
