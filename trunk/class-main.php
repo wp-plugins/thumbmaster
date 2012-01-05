@@ -7,6 +7,7 @@ class tt_thumbs_main {
             'resizer' => 2,
             'default_thumb' => '',
             'youtube' => 0,
+            'child' => 0,
             'tt_lastcheck' => 0,
             'tt_version' => ''
         ));

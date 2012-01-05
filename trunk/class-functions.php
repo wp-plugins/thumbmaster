@@ -18,6 +18,7 @@ class tt_thumbs {
         $options = tt_thumbs_main::$options;
         define('TT_RESIZER', $options['resizer']);
         define('TT_YOUTUBE', $options['youtube']);
+        define('TT_CHILD', $options['child']);
         define('TT_DEFAULT_THUMB_URL', $options['default_thumb']);
         if (TT_RESIZER == 2) add_action('wp_head', array(
             'tt_thumbs',
@@ -114,9 +115,9 @@ class tt_thumbs {
             $meta_cache = $meta_cache[$object_id];
         }
         if (isset($meta_cache[$meta_key])) return maybe_unserialize($meta_cache[$meta_key][0]); //use existing thumbnail
-        //   elseif($attachment_id=self::get_the_post_first_image($object_id)) return self::set_post_thumbnail($object_id, $meta_cache, $attachment_id );//use first attached image LONG DB QUERY
+        elseif(TT_CHILD && ($attachment_id=self::get_first_child($object_id))) return self::set_post_thumbnail($object_id, $meta_cache, $attachment_id );//use first attached image LONG DB QUERY
         elseif (!$src = self::get_the_post_thumbnail_src($object_id)) if (!$src = TT_DEFAULT_THUMB_URL) return self::set_post_thumbnail($object_id, $meta_cache, 0); //no image at all: trick metacache w/null thumbnail to prevent further timewasting
-        //the magic happens: virtual attachment using first extracted image
+        //found first embedded image - the magic happens: inject as virtual attachment into the cache
         $attachment_id = TT_ATTACHMENT_ID + $object_id;
         self::set_post_thumbnail($object_id, $meta_cache, $attachment_id);
         if (substr(strtolower($src) , 0, 7) == 'http://') { //remote image
@@ -214,23 +215,20 @@ class tt_thumbs {
         $img_url = TT_TIMTHUMB_URL . '?src=' . (substr($img_url, 0, 7) == 'http://' ? urlencode($img_url) : $img_url) . '&amp;w=' . $width . '&amp;h=' . $height . '&amp;zc=1';
         return $img_url;
     }
-    /*
-    function get_the_post_first_image ($post=null) {
-    if(is_numeric($post)) $post=(object)array('ID'=>$post);
-    elseif(!is_object($post)) $post=$GLOBALS['post'];
-    $args = array(
-      'numberposts' => 1,
-      'order'=> 'ASC',
-      'post_mime_type' => 'image',
-      'post_parent' => $post->ID,
-      'post_status' => null,
-      'post_type' => 'attachment'
-    );
-    list($attachment_id,$attachment) = each(get_children( $args ));
-    //if(is_super_admin()) echo '<pre>att: '.var_export(array($post->ID,$attachment_id),true).'</pre>';
-    return $attachment_id;
+    function get_first_child($post=null) {
+        if(is_numeric($post)) $post=(object)array('ID'=>$post);
+        elseif(!is_object($post)) $post=$GLOBALS['post'];
+        $args = array(
+          'numberposts' => 1,
+          'order'=> 'ASC',
+          'post_mime_type' => 'image',
+          'post_parent' => $post->ID,
+          'post_status' => null,
+          'post_type' => 'attachment'
+        );
+        list($attachment_id,$attachment) = each(get_children( $args ));
+        return $attachment_id;
     }
-    */
     function set_post_thumbnail($object_id, $meta_cache, $attachment_id) {
         global $wp_object_cache;
         $meta_cache['_thumbnail_id'] = array(
