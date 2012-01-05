@@ -115,10 +115,10 @@ class tt_thumbs {
             $meta_cache = $meta_cache[$object_id];
         }
         if (isset($meta_cache[$meta_key])) return maybe_unserialize($meta_cache[$meta_key][0]); //use existing thumbnail
-        elseif(TT_CHILD && ($attachment_id=self::get_first_child($object_id))) return self::set_post_thumbnail($object_id, $meta_cache, $attachment_id );//use first attached image LONG DB QUERY
-        elseif (!$src = self::get_the_post_thumbnail_src($object_id)) if (!$src = TT_DEFAULT_THUMB_URL) return self::set_post_thumbnail($object_id, $meta_cache, 0); //no image at all: trick metacache w/null thumbnail to prevent further timewasting
+        if (TT_CHILD) if($attachment_id=self::get_first_child($object_id)) return self::set_post_thumbnail($object_id, $meta_cache, $attachment_id );//use first attached image LONG DB QUERY
+        if (!$src = self::get_the_post_thumbnail_src($object_id)) if (!$src = TT_DEFAULT_THUMB_URL) return self::set_post_thumbnail($object_id, $meta_cache, 0); //no image at all: trick metacache w/null thumbnail to prevent further timewasting
         //found first embedded image - the magic happens: inject as virtual attachment into the cache
-        $attachment_id = TT_ATTACHMENT_ID + $object_id;
+        $attachment_id = TT_ATTACHMENT_ID + $object_id;//create a fake id
         self::set_post_thumbnail($object_id, $meta_cache, $attachment_id);
         if (substr(strtolower($src) , 0, 7) == 'http://') { //remote image
             $mimetype = 'image/';
