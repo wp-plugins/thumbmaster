@@ -13,6 +13,10 @@ Generates properly formatted post thumbnails on-the-fly for plugins and themes.
 Generates properly formatted post thumbnails on-the-fly for plugins and themes.
 Fallback thumbnails, remote images, Youtube videos supported.
 
+= Donations =
+
+If you like and use ThumbMaster you could [consider some donation](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=UV2FDM29SNY6W) to the author's site [JEWPI.COM](http://www.jewpi.com/).
+
 == Installation ==
 
 Install as plugin:
