@@ -52,6 +52,7 @@ class tt_thumbs {
 <input type="radio" name="tt_options[resizer]" value="0" <? echo $options[resizer] == 0 ? 'checked' : '' ?>><? _e('Resize only using width') ?><br>
 <input type="radio" name="tt_options[resizer]" value="3" <? echo $options[resizer] == 3 ? 'checked' : '' ?>><? _e('Resize only using height') ?><br>
 <input type="radio" name="tt_options[resizer]" value="4" <? echo $options[resizer] == 4 ? 'checked' : '' ?>><? _e('Resize only using both dimensions (distorted)') ?><br>
+You may override this setting by adding "tt_resize" class to image attributes in your template to force Timthumb method for maximum compatibility (in Javascript slideshows, etc.)
 <?
     }
     public static function option_default_thumb() {
@@ -77,7 +78,7 @@ Select Yes if you prefer extracting Youtube thumbnails from embedded videos and 
 ?>
 <input type="radio" name="tt_options[child]" value="1" <? echo $options[child] ? 'checked' : '' ?>><? _e('Yes') ?><br>
 <input type="radio" name="tt_options[child]" value="0" <? echo $options[child] ? '' : 'checked' ?>><? _e('No') ?><br>
-Select Yes if attached (children) post images should be checked for missing thumbnails (may result slow database queries on large sites)<br>
+Select Yes if attached (children) post images also should be checked for missing thumbnails (may result slow database queries on large sites)<br>
 <?
     }
     public static function options_validate($input) {
