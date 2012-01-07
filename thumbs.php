@@ -11,7 +11,6 @@ Author URI: http://www.jewpi.com/
 if(!class_exists(tt_thumbs_main)) {
 class tt_thumbs_main {
     public static $options = '';
-    public static $ttversion = '';
     function __construct() {
         self::$options = get_option('tt_options', array(
             'resizer' => 2,
@@ -61,14 +60,14 @@ class tt_thumbs_main {
     	if(!file_exists(TT_TIMTHUMB)) copy(dirname(__FILE__) . '/t.php',TT_TIMTHUMB);
         if ($cont = file_get_contents(TT_TIMTHUMB)) {
            preg_match("~define\s*\(\s*[\'|\"]VERSION[\'|\"],\s*[\'|\"]([^\'|\"]*)~", $cont, $match);
-           if($match[1]) self::$ttversion = $match[1];
+           if($match[1]) $ttversion = $match[1];
         }
-        if (!self::$ttversion || (!DISABLE_UPDATE && (($force && self::$options['tt_lastcheck'] < time() - 3600) || self::$options['tt_lastcheck'] < time() - 24 * 3600))) { //check daily
+        if (!$ttversion || (!DISABLE_UPDATE && (($force && self::$options['tt_lastcheck'] < time() - 3600) || self::$options['tt_lastcheck'] < time() - 24 * 3600))) { //check daily
             if ($cont = self::file_read('http://timthumb.googlecode.com/svn/trunk/timthumb.php')) {
                 preg_match("~define\s*\(\s*[\'|\"]VERSION[\'|\"],\s*[\'|\"]([^\'|\"]*)~", $cont, $match);
-                if ($match[1]) if (self::$ttversion < $match[1]) { //higher version found
+                if ($match[1]) if ($ttversion < $match[1]) { //higher version found
                     file_put_contents(TT_TIMTHUMB, $cont);
-                    self::$ttversion = $match[1];
+                    $ttversion = $match[1];
                 }
            }
            self::$options['tt_lastcheck'] = time();
@@ -77,6 +76,7 @@ class tt_thumbs_main {
         $ttconfig = dirname(TT_TIMTHUMB) . '/timthumb-config.php';
         $config = dirname(__FILE__) . '/config.php';
         if ($force || !file_exists($ttconfig) || (file_exists($config) && file_exists($ttconfig) && @filemtime($config) > @filemtime($ttconfig))) self::update_ttconfig();
+        return $ttversion;
     }
     public static function file_read($url,$timeout=10) {
        $parts=parse_url($url);
