@@ -36,11 +36,10 @@ class tt_thumbs {
         add_settings_field('tt_child_field', 'Check attached images', array(
             'tt_thumbs',
             'option_child'
-        ) , 'tt_thumbs_page', 'tt_main_section');
-        
-        tt_thumbs_main::check_timthumb_version(true);//force version check
+        ) , 'tt_thumbs_page', 'tt_main_section');        
     }
     public static function section_text() {
+        tt_thumbs_main::check_timthumb_version(true);//force version check
 ?>
 <p>Generates properly formatted post thumbnails on-the-fly for plugins and themes. Fallback thumbnails, remote images, Youtube videos supported.</p>
 <?
