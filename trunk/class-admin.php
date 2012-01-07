@@ -39,7 +39,6 @@ class tt_thumbs {
         ) , 'tt_thumbs_page', 'tt_main_section');        
     }
     public static function section_text() {
-        tt_thumbs_main::check_timthumb_version(true);//force version check
 ?>
 <p>Generates properly formatted post thumbnails on-the-fly for plugins and themes. Fallback thumbnails, remote images, Youtube videos supported.</p>
 <?
@@ -94,7 +93,7 @@ Select Yes if attached (children) post images also should be checked for missing
 				<input type="hidden" name="tt_options[tt_lastcheck]" value="<?php echo $options[tt_lastcheck] ?>" />
 				<input type="submit" name="submitter" value="<?php esc_attr_e('Save Changes') ?>" class="button-primary" />
 			</form>
-            <p>ThumbMaster version: <? echo tt_thumbs_main::version() ?> | Timthumb version: <? echo tt_thumbs_main::$ttversion ?> last checked: <? echo gmdate('Y-m-d H:i', $options[tt_lastcheck] + get_option('gmt_offset') * 3600) ?></p>
+            <p>ThumbMaster version: <? echo tt_thumbs_main::version() ?> | Timthumb version: <? echo tt_thumbs_main::check_timthumb_version(true) ?> last checked: <? echo gmdate('Y-m-d H:i', $options[tt_lastcheck] + get_option('gmt_offset') * 3600) ?></p>
 		</div>
 <?
     }
