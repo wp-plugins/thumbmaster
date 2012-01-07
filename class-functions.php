@@ -6,10 +6,10 @@ class tt_thumbs {
             'tt_thumbs',
             'init'
         ) , 100);
-    }
-    function jsloader() {
-        wp_enqueue_script('jquery');
-        wp_enqueue_script('tt_thumbs', TT_JS_URL, false, substr(md5(filemtime(TT_JS)) , -5) , true);
+        add_action('admin_bar_menu', array(
+            'tt_thumbs',
+            'admin_bar_menu'
+        ), 150);
     }
     function init() {
         define('TT_ATTACHMENT_ID', 99999999);
@@ -50,6 +50,29 @@ class tt_thumbs {
             "wp_get_attachment_image_attributes"
         ) , 1, 2);
 */      
+        tt_thumbs_main::check_timthumb_version();
+    }
+    function jsloader() {
+        wp_enqueue_script('jquery');
+        wp_enqueue_script('tt_thumbs', TT_JS_URL, false, substr(md5(filemtime(TT_JS)) , -5) , true);
+    }
+    function admin_bar_menu() {
+        global $wp_admin_bar;
+
+        if (current_user_can('edit_theme_options')) {
+            $menu_items = array(
+                array(
+                    'id' => 'thumbmaster',
+                    'parent' => 'site-name',
+                    'title' => __('Thumbnail'),
+                    'href' => admin_url('themes.php?page=tt_thumbs_page')
+                ),
+            );
+
+            foreach ($menu_items as $menu_item) {
+                $wp_admin_bar->add_menu($menu_item);
+            }
+        }
     }
     //start filters
     function get_attached_file($file, $attachment_id) {

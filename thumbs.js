@@ -1,13 +1,13 @@
 function thumbProcess() {
-    jQuery('[class^="tt_thumb-"]').each(function () {
-            thumbResize(this);
-    })
+   jQuery('[class^="tt_thumb-"]').one("ttload",function(){
+      thumbResize(this);
+   })
+   .each(function(){
+      if(this.complete) jQuery(this).trigger("ttload");
+   });
 }
 
 function thumbResize(thumb) {
-//    jQuery("<img/>").attr("src", jQuery(thumb).attr('src')).load(function () {
-//        twidth = this.width;
-//        theight = this.height;
         t=new Image;
         t.src=jQuery(thumb).attr('src');
         twidth = t.width;
@@ -137,5 +137,5 @@ jQuery.fn.getStyleObject = function () {
     return returns;
 }
 
-thumbProcess();//process ASAP
+//thumbProcess();//process ASAP
 jQuery(document).ready(function () {thumbProcess();});//process the rest

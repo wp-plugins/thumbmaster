@@ -1,7 +1,7 @@
 <?
 /*
 Plugin Name: ThumbMaster
-Version: 0.12
+Version: 0.13
 Plugin URI: http://wordpress.org/extend/plugins/thumbmaster/
 Description: Generates properly formatted post thumbnails on-the-fly for plugins and themes. Fallback thumbnails, external images, Youtube videos supported.
 Author: Nathan Schlesinger
@@ -11,6 +11,7 @@ Author URI: http://www.jewpi.com/
 if(!class_exists(tt_thumbs_main)) {
 class tt_thumbs_main {
     public static $options = '';
+    public static $ttversion = '';
     function __construct() {
         self::$options = get_option('tt_options', array(
             'resizer' => 2,
@@ -18,7 +19,6 @@ class tt_thumbs_main {
             'youtube' => 0,
             'child' => 0,
             'tt_lastcheck' => 0,
-            'tt_version' => ''
         ));
         $config = dirname(__FILE__) . '/config.php';
         if (file_exists($config)) require_once ($config);
@@ -27,19 +27,16 @@ class tt_thumbs_main {
         define('TT_DEFAULT_THUMB','ttDefault.jpg');
         define('TT_TIMTHUMB', (substr(TIMTHUMB_PATH, 0, strlen(WP_CONTENT_DIR)) == WP_CONTENT_DIR) ? TIMTHUMB_PATH : dirname(__FILE__) . '/t.php');
         define('TT_TIMTHUMB_URL', WP_CONTENT_URL . substr(TT_TIMTHUMB, strlen(WP_CONTENT_DIR)));
-        self::check_timthumb_version();
         if (!function_exists(has_post_thumbnail)) add_theme_support('post-thumbnails');
         if (strpos(dirname(__FILE__) , WP_PLUGIN_DIR) !== false) {//check if running as plugin or template addon
             register_activation_hook(__FILE__, array(
                 'tt_thumbs_main',
                 'activate'
             ));
-/*
             register_deactivation_hook(__FILE__, array(
                 'tt_thumbs_main',
                 'deactivate'
             ));
-*/
             register_uninstall_hook(__FILE__, array(
                 'tt_thumbs_main',
                 'uninstall'
@@ -51,34 +48,46 @@ class tt_thumbs_main {
     public static function activate() {
         self::check_timthumb_version(true);
     }
-/*
     public static function deactivate() {
     }
-*/
     public static function uninstall() {
         delete_option('tt_options');
     }
+    public static function version() {
+       preg_match('/Version:\s*([^\n|\r]*)/i',file_get_contents(__FILE__),$match);
+       return $match[1];
+    }
     public static function check_timthumb_version($force = false) {
-    	$version = '';
     	if(!file_exists(TT_TIMTHUMB)) copy(dirname(__FILE__) . '/t.php',TT_TIMTHUMB);
         if ($cont = file_get_contents(TT_TIMTHUMB)) {
-           preg_match("~define\s*\(\s*[\'|\"]VERSION[\'|\"],\s*[\'|\"]([^\'|\"]*)~", $cont, $matches);
-           if ($version = $matches[1]) self::$options['tt_version'] = $version;
+           preg_match("~define\s*\(\s*[\'|\"]VERSION[\'|\"],\s*[\'|\"]([^\'|\"]*)~", $cont, $match);
+           if($match[1]) self::$ttversion = $match[1];
         }
-        if (!$version || (!DISABLE_UPDATE && ($force || self::$options['tt_lastcheck'] < time() - 24 * 3600))) { //check daily
-            self::$options['tt_lastcheck'] = time();
-            if ($cont = @file_get_contents('http://timthumb.googlecode.com/svn/trunk/timthumb.php')) {
-                preg_match("~define\s*\(\s*[\'|\"]VERSION[\'|\"],\s*[\'|\"]([^\'|\"]*)~", $cont, $matches);
-                if ($matches[1]) if ($version < $matches[1]) { //higher version found
+        if (!self::$ttversion || (!DISABLE_UPDATE && ($force || self::$options['tt_lastcheck'] < time() - 24 * 3600))) { //check daily
+            if ($cont = self::file_read('http://timthumb.googlecode.com/svn/trunk/timthumb.php')) {
+                preg_match("~define\s*\(\s*[\'|\"]VERSION[\'|\"],\s*[\'|\"]([^\'|\"]*)~", $cont, $match);
+                if ($match[1]) if (self::$ttversion < $match[1]) { //higher version found
                     file_put_contents(TT_TIMTHUMB, $cont);
-                    self::$options['tt_version'] = $matches[1];
+                    self::$ttversion = $match[1];
                 }
-            }
-            update_option('tt_options', self::$options);
+           }
+           self::$options['tt_lastcheck'] = time();
+           update_option('tt_options', self::$options);
         }
         $ttconfig = dirname(TT_TIMTHUMB) . '/timthumb-config.php';
         $config = dirname(__FILE__) . '/config.php';
         if ($force || !file_exists($ttconfig) || (file_exists($config) && file_exists($ttconfig) && @filemtime($config) > @filemtime($ttconfig))) self::update_ttconfig();
+    }
+    public static function file_read($url,$timeout=10) {
+       $parts=parse_url($url);
+       if(!$fp = fsockopen($parts[host], $parts[port] ? $parts[port] : 80, $errno, $errstr, $timeout)) return;
+       fclose($fp);
+       if($handle = fopen($url, "rb")) {
+          stream_set_timeout($handle, $timeout); 
+          $contents = @stream_get_contents($handle);
+          fclose($handle);
+          return $contents;
+       }
     }
     public static function update_ttconfig() {
         $out = "<" . "?php\n";
