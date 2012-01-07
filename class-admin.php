@@ -81,19 +81,18 @@ Select Yes if attached (children) post images also should be checked for missing
 <?
     }
     public static function options_validate($input) {
+    	$input[tt_lastcheck]=tt_thumbs_main::$options[tt_lastcheck];
         return $input;
     }
     public static function options() {
-        $options = tt_thumbs_main::$options;
 ?>
 		<div class="wrap">
 			<form method="post" action="options.php">
                 <? settings_fields('tt_options_form'); ?>
                 <? do_settings_sections('tt_thumbs_page'); ?>
-				<input type="hidden" name="tt_options[tt_lastcheck]" value="<?php echo $options[tt_lastcheck] ?>" />
 				<input type="submit" name="submitter" value="<?php esc_attr_e('Save Changes') ?>" class="button-primary" />
 			</form>
-            <p>ThumbMaster version: <? echo tt_thumbs_main::version() ?> | Timthumb version: <? echo tt_thumbs_main::check_timthumb_version(true) ?> last checked: <? echo gmdate('Y-m-d H:i', $options[tt_lastcheck] + get_option('gmt_offset') * 3600) ?></p>
+            <p>ThumbMaster version: <? echo tt_thumbs_main::version() ?> | Timthumb version: <? echo tt_thumbs_main::check_timthumb_version(true) ?> last checked: <? echo gmdate('Y-m-d H:i', tt_thumbs_main::$options[tt_lastcheck] + get_option('gmt_offset') * 3600) ?></p>
 		</div>
 <?
     }
