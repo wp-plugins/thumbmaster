@@ -63,7 +63,7 @@ class tt_thumbs_main {
            preg_match("~define\s*\(\s*[\'|\"]VERSION[\'|\"],\s*[\'|\"]([^\'|\"]*)~", $cont, $match);
            if($match[1]) self::$ttversion = $match[1];
         }
-        if (!self::$ttversion || (!DISABLE_UPDATE && ($force || self::$options['tt_lastcheck'] < time() - 24 * 3600))) { //check daily
+        if (!self::$ttversion || (!DISABLE_UPDATE && (($force && self::$options['tt_lastcheck'] < time() - 3600) || self::$options['tt_lastcheck'] < time() - 24 * 3600))) { //check daily
             if ($cont = self::file_read('http://timthumb.googlecode.com/svn/trunk/timthumb.php')) {
                 preg_match("~define\s*\(\s*[\'|\"]VERSION[\'|\"],\s*[\'|\"]([^\'|\"]*)~", $cont, $match);
                 if ($match[1]) if (self::$ttversion < $match[1]) { //higher version found
