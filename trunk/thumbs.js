@@ -66,6 +66,7 @@ function thumbResize(thumb) {
             'border': 0,
             'display': 'inline',
             'float': 'none',
+	        'z-index':0,	
             'max-width': 'none',
             'max-height': 'none'
         });
@@ -87,7 +88,7 @@ function thumbResize(thumb) {
             'margin': 0,
             'padding': 0,
             'position': 'relative',
-	        'z-index':500,	
+//	        'z-index':500,	
             'border': 0
         });
         return true;
