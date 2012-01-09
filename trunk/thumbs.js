@@ -1,12 +1,3 @@
-function thumbProcess() {
-   jQuery('[class^="tt_thumb-"]').one("ttload",function(){
-      thumbResize(this);
-   })
-   .each(function(){
-      if(this.complete) jQuery(this).trigger("ttload");
-   });
-}
-
 function thumbResize(thumb) {
         t=new Image;
         t.src=jQuery(thumb).attr('src');
@@ -135,6 +126,23 @@ jQuery.fn.getStyleObject = function () {
         return returns;
     };
     return returns;
+}
+jQuery.fn.whenLoaded = function(fn){
+   return this.each(function(){
+     // if already loaded call callback
+     if (this.complete || this.readyState == 'complete'){
+       fn.call(this);
+     } else { // otherwise bind onload event
+       jQuery(this).load(fn);
+     }
+   });
+}
+ 
+function thumbProcess() {
+   jQuery('[class^="tt_thumb-"]')
+   .whenLoaded(function(){
+      thumbResize(this);
+   });
 }
 
 //thumbProcess();//process ASAP
