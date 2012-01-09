@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: thumbnails
 Requires at least: 2.9
 Tested up to: 3.3
-Stable tag: 0.13
+Stable tag: 0.14
 
 Generates properly formatted post thumbnails on-the-fly for plugins and themes.
 
@@ -34,6 +34,9 @@ Admin options will appear as `Thumbnail` menu item in `Appearance` section on yo
 1. Admin panel
 
 == Changelog ==
+
+= 0.14 =
+* 2012-01-09 Minor bug fixes
 
 = 0.13 =
 * 2012-01-07 Improved javascript code
