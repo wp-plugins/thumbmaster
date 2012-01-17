@@ -3,7 +3,7 @@ Contributors: jewpi
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=UV2FDM29SNY6W
 Tags: thumbnails
 Requires at least: 2.9
-Tested up to: 3.3
+Tested up to: 3.3.1
 Stable tag: 0.15
 
 Generates properly formatted post thumbnails on-the-fly for plugins and themes.
