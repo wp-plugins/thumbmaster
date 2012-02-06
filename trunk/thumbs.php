@@ -1,12 +1,14 @@
 <?
 /*
 Plugin Name: ThumbMaster
-Version: 0.15
+Version: 0.16
 Plugin URI: http://wordpress.org/extend/plugins/thumbmaster/
 Description: Generates properly formatted post thumbnails on-the-fly for plugins and themes. Fallback thumbnails, external images, Youtube videos supported.
 Author: Nathan Schlesinger
 Author URI: http://www.jewpi.com/
 */
+
+if(!function_exists(rrmdir)) {function rrmdir($path) { return is_file($path) ? @unlink($path) : array_map('rrmdir',glob($path.'/*'))==@rmdir($path);}}
 
 if(!class_exists(tt_thumbs_main)) {
 class tt_thumbs_main {
@@ -26,6 +28,7 @@ class tt_thumbs_main {
         define('TT_DEFAULT_THUMB','ttDefault.jpg');
         define('TT_TIMTHUMB', (substr(TIMTHUMB_PATH, 0, strlen(WP_CONTENT_DIR)) == WP_CONTENT_DIR) ? TIMTHUMB_PATH : dirname(__FILE__) . '/t.php');
         define('TT_TIMTHUMB_URL', WP_CONTENT_URL . substr(TT_TIMTHUMB, strlen(WP_CONTENT_DIR)));
+        define('TT_TIMTHUMB_CACHE_DIR',WP_CONTENT_DIR.'/timthumb-cache');
         if (!function_exists(has_post_thumbnail)) add_theme_support('post-thumbnails');
         if (strpos(dirname(__FILE__) , WP_PLUGIN_DIR) !== false) {//check if running as plugin or template addon
             register_activation_hook(__FILE__, array(
@@ -51,14 +54,15 @@ class tt_thumbs_main {
     }
     public static function uninstall() {
         delete_option('tt_options');
+        if(is_dir(TT_TIMTHUMB_CACHE_DIR)) rrmdir(TT_TIMTHUMB_CACHE_DIR);
     }
     public static function version() {
        preg_match('/Version:\s*([^\n|\r]*)/i',file_get_contents(__FILE__),$match);
        return $match[1];
     }
     public static function check_timthumb_version($force = false) {
-    	if(!file_exists(TT_TIMTHUMB)) copy(dirname(__FILE__) . '/t.php',TT_TIMTHUMB);
-        if ($cont = file_get_contents(TT_TIMTHUMB)) {
+    	if(!file_exists(TT_TIMTHUMB) && TT_TIMTHUMB!=dirname(__FILE__) . '/t.php') copy(dirname(__FILE__) . '/t.php',TT_TIMTHUMB);
+        if ($cont = @file_get_contents(TT_TIMTHUMB)) {
            preg_match("~define\s*\(\s*[\'|\"]VERSION[\'|\"],\s*[\'|\"]([^\'|\"]*)~", $cont, $match);
            if($match[1]) $ttversion = $match[1];
         }
@@ -66,6 +70,10 @@ class tt_thumbs_main {
             if ($cont = self::file_read('http://timthumb.googlecode.com/svn/trunk/timthumb.php')) {
                 preg_match("~define\s*\(\s*[\'|\"]VERSION[\'|\"],\s*[\'|\"]([^\'|\"]*)~", $cont, $match);
                 if ($match[1]) if ($ttversion < $match[1]) { //higher version found
+                    $cont=strtr($cont,array(//patch
+                       'if(NOT_FOUND_IMAGE && $this->is404()){' => 'if(NOT_FOUND_IMAGE && $this->is404()){ if($_GET["src"]!=NOT_FOUND_IMAGE) {$_GET["src"]=NOT_FOUND_IMAGE;return $this->start();}',
+                       'if(ERROR_IMAGE){' => 'if(ERROR_IMAGE){ if($_GET["src"]!=ERROR_IMAGE) {$_GET["src"]=ERROR_IMAGE;return $this->start();}',
+                    ));
                     file_put_contents(TT_TIMTHUMB, $cont);
                     $ttversion = $match[1];
                 }
@@ -95,10 +103,12 @@ class tt_thumbs_main {
         $out.= "//you may override default timthumb options in timthumb-config.inc\n";
         $out.= "//ThumbMaster options may also be set in config.php\n";
         $out.= "if(file_exists('".(dirname(__FILE__).'/timthumb-config.inc')."')) require_once('".(dirname(__FILE__).'/timthumb-config.inc')."');\n";
-        $out.= "if(!defined(ALLOW_ALL_EXTERNAL_SITES)) define ('ALLOW_ALL_EXTERNAL_SITES', true);\n";
-        $out.= "if(!defined(NOT_FOUND_IMAGE)) define ('NOT_FOUND_IMAGE', '" . (dirname(__FILE__) . '/'.TT_DEFAULT_THUMB) . "');\n";
-        $out.= "if(!defined(ERROR_IMAGE)) define ('ERROR_IMAGE', '" . (dirname(__FILE__) . '/'.TT_DEFAULT_THUMB) . "');\n";
-        $out.= "if(!defined(FILE_CACHE_DIRECTORY)) define ('FILE_CACHE_DIRECTORY', false);\n";
+        $out.= "if(!defined('ALLOW_ALL_EXTERNAL_SITES')) define ('ALLOW_ALL_EXTERNAL_SITES', true);\n";
+        $out.= "if(!defined('MEMORY_LIMIT')) define ('MEMORY_LIMIT', '64M');\n";
+        $out.= "if(!defined('NOT_FOUND_IMAGE')) define ('NOT_FOUND_IMAGE', '" . (dirname(__FILE__) . '/'.TT_DEFAULT_THUMB) . "');\n";
+        $out.= "if(!defined('ERROR_IMAGE')) define ('ERROR_IMAGE', '" . (dirname(__FILE__) . '/'.TT_DEFAULT_THUMB) . "');\n";
+//        $out.= "if(!defined('FILE_CACHE_DIRECTORY')) define ('FILE_CACHE_DIRECTORY', false);\n";
+        $out.= "if(!defined('FILE_CACHE_DIRECTORY')) define ('FILE_CACHE_DIRECTORY', '".TT_TIMTHUMB_CACHE_DIR."');\n";
         file_put_contents(dirname(TT_TIMTHUMB) . '/timthumb-config.php', $out);
     }
 } //class
