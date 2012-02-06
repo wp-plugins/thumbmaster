@@ -70,10 +70,12 @@ class tt_thumbs_main {
             if ($cont = self::file_read('http://timthumb.googlecode.com/svn/trunk/timthumb.php')) {
                 preg_match("~define\s*\(\s*[\'|\"]VERSION[\'|\"],\s*[\'|\"]([^\'|\"]*)~", $cont, $match);
                 if ($match[1]) if ($ttversion < $match[1]) { //higher version found
+/*
                     $cont=strtr($cont,array(//patch
                        'if(NOT_FOUND_IMAGE && $this->is404()){' => 'if(NOT_FOUND_IMAGE && $this->is404()){ if($_GET["src"]!=NOT_FOUND_IMAGE) {$_GET["src"]=NOT_FOUND_IMAGE;return $this->start();}',
                        'if(ERROR_IMAGE){' => 'if(ERROR_IMAGE){ if($_GET["src"]!=ERROR_IMAGE) {$_GET["src"]=ERROR_IMAGE;return $this->start();}',
                     ));
+*/
                     file_put_contents(TT_TIMTHUMB, $cont);
                     $ttversion = $match[1];
                 }
