@@ -20,7 +20,7 @@ class tt_thumbs {
         define('TT_YOUTUBE', $options['youtube']);
         define('TT_CHILD', $options['child']);
         define('TT_DEFAULT_THUMB_URL', $options['default_thumb']);
-        if (TT_RESIZER == 2) add_action('wp_head', array(
+        if (TT_RESIZER == 2) add_action('wp_print_scripts', array(
             'tt_thumbs',
             'jsloader'
         ));
@@ -282,9 +282,16 @@ class tt_thumbs {
         }
     }
     function mu_path($src) {
+       static $paths;
+       if(!isset($paths)) $paths=wp_upload_dir();
+       $parts = parse_url($paths['baseurl']);
+       if ($src[0] != '/') $src = '/' . $src;
+       if(substr($src,0,strlen($parts['path']))==$parts['path']) $src = substr($paths['basedir'].substr($src,strlen($parts['path'])), strlen(ABSPATH) - 1);
+/*
         $imageParts = explode('/files/', $src);
         if (isset($imageParts[1])) $src = substr(WP_CONTENT_DIR . '/blogs.dir/' . $GLOBALS[blog_id] . '/files/' . $imageParts[1], strlen(ABSPATH) - 1);
         elseif ($src[0] != '/') $src = '/' . $src;
+*/
         return $src;
     }
     function get_size($size = 'thumbnail') {
