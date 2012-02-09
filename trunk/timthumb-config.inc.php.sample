@@ -1,5 +1,5 @@
 <?php
-//optional timthumb configuration file, extension SHOULD BE .inc
+//optional timthumb configuration file
 
 //define ('DEBUG_ON', false);								//Enable debug logging to web server error log (STDERR)
 //define ('DEBUG_LEVEL', 1);								//Debug level 1 is less noisy and 3 is the most noisy
