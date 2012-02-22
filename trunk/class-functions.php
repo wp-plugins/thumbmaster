@@ -296,6 +296,8 @@ class tt_thumbs {
     }
     function get_size($size = 'thumbnail') {
         global $_wp_additional_image_sizes;
+        if(is_string($size)) if(substr($size,0,5)=='post-') $size=substr($size,5);
+        if(!$size) $size = 'thumbnail';
         if (is_array($size)) {
             list($width, $height) = $size;
             $size = join('x', $size);
