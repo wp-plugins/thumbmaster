@@ -1,7 +1,7 @@
 <?
 /*
 Plugin Name: ThumbMaster
-Version: 0.16
+Version: 0.17
 Plugin URI: http://wordpress.org/extend/plugins/thumbmaster/
 Description: Generates properly formatted post thumbnails on-the-fly for plugins and themes. Fallback thumbnails, external images, Youtube videos supported.
 Author: Nathan Schlesinger
