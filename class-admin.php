@@ -37,6 +37,10 @@ class tt_thumbs {
             'tt_thumbs',
             'option_child'
         ) , 'tt_thumbs_page', 'tt_main_section');        
+        add_settings_field('tt_ttupdate_field', 'Automatic Timthumb update', array(
+            'tt_thumbs',
+            'option_ttupdate'
+        ) , 'tt_thumbs_page', 'tt_main_section');        
     }
     public static function section_text() {
 ?>
@@ -78,6 +82,13 @@ Select Yes if you prefer extracting Youtube thumbnails from embedded videos and 
 <input type="radio" name="tt_options[child]" value="1" <? echo $options[child] ? 'checked' : '' ?>><? _e('Yes') ?><br>
 <input type="radio" name="tt_options[child]" value="0" <? echo $options[child] ? '' : 'checked' ?>><? _e('No') ?><br>
 Select Yes if attached (children) post images also should be checked for missing thumbnails (may result slow database queries on large sites)<br>
+<?
+    }
+    public static function option_ttupdate() {
+        $options = tt_thumbs_main::$options;
+?>
+<input type="radio" name="tt_options[ttupdate]" value="1" <? echo $options[ttupdate] ? 'checked' : '' ?>><? _e('Yes') ?> (recommended)<br>
+<input type="radio" name="tt_options[ttupdate]" value="0" <? echo $options[ttupdate] ? '' : 'checked' ?>><? _e('No') ?><br>
 <?
     }
     public static function options_validate($input) {
