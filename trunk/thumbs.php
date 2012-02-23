@@ -14,16 +14,17 @@ if(!class_exists(tt_thumbs_main)) {
 class tt_thumbs_main {
     public static $options = '';
     function __construct() {
-        self::$options = get_option('tt_options', array(
+    	$default_options = array(
             'resizer' => 2,
             'default_thumb' => '',
             'youtube' => 0,
             'child' => 0,
+            'ttupdate' => 1,
             'tt_lastcheck' => 0,
-        ));
+        );
+        self::$options = array_merge($default_options,get_option('tt_options',$default_options));
         $config = dirname(__FILE__) . '/config.php';
         if (file_exists($config)) require_once ($config);
-        if (!defined(DISABLE_UPDATE)) define('DISABLE_UPDATE', false);
         if (!defined(TIMTHUMB_PATH)) define('TIMTHUMB_PATH', dirname(__FILE__) . '/t.php');
         define('TT_DEFAULT_THUMB','ttDefault.jpg');
         define('TT_TIMTHUMB', (substr(TIMTHUMB_PATH, 0, strlen(WP_CONTENT_DIR)) == WP_CONTENT_DIR) ? TIMTHUMB_PATH : dirname(__FILE__) . '/t.php');
@@ -66,7 +67,7 @@ class tt_thumbs_main {
            preg_match("~define\s*\(\s*[\'|\"]VERSION[\'|\"],\s*[\'|\"]([^\'|\"]*)~", $cont, $match);
            if($match[1]) $ttversion = $match[1];
         }
-        if (!$ttversion || (!DISABLE_UPDATE && (($force && self::$options['tt_lastcheck'] < time() - 3600) || self::$options['tt_lastcheck'] < time() - 24 * 3600))) { //check daily
+        if (!$ttversion || (self::$options['ttupdate'] && (($force && self::$options['tt_lastcheck'] < time() - 3600) || self::$options['tt_lastcheck'] < time() - 24 * 3600))) { //check daily
             if ($cont = self::file_read('http://timthumb.googlecode.com/svn/trunk/timthumb.php')) {
                 preg_match("~define\s*\(\s*[\'|\"]VERSION[\'|\"],\s*[\'|\"]([^\'|\"]*)~", $cont, $match);
                 if ($match[1]) if ($ttversion < $match[1]) { //higher version found
