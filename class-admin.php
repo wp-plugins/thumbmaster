@@ -92,7 +92,7 @@ Select Yes if attached (children) post images also should be checked for missing
                 <? do_settings_sections('tt_thumbs_page'); ?>
 				<input type="submit" name="submitter" value="<?php esc_attr_e('Save Changes') ?>" class="button-primary" />
 			</form>
-            <p>ThumbMaster version: <? echo tt_thumbs_main::version() ?> | Timthumb version: <? echo tt_thumbs_main::check_timthumb_version() ?> last checked: <? echo gmdate('Y-m-d H:i', tt_thumbs_main::$options[tt_lastcheck] + get_option('gmt_offset') * 3600) ?></p>
+            <p><a href="http://wordpress.org/extend/plugins/thumbmaster/" target="_blank">ThumbMaster</a> version: <? echo tt_thumbs_main::version() ?> | <a href="http://www.binarymoon.co.uk/projects/timthumb/" target="_blank">Timthumb</a> version: <? echo tt_thumbs_main::check_timthumb_version() ?> last checked: <? echo gmdate('Y-m-d H:i', tt_thumbs_main::$options[tt_lastcheck] + get_option('gmt_offset') * 3600) ?></p>
             <p><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=UV2FDM29SNY6W" target="_blank"><img src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif"></a></p>
 		</div>
 <?
