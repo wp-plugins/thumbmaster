@@ -362,7 +362,7 @@ class tt_thumbs {
         if (eregi('button', $image)) return false;
         if (eregi('gomb', $image)) return false;
         if (eregi('avatar', $image)) return false;
-        if (eregi('logo', $image)) return false;
+//        if (eregi('logo', $image)) return false;
         if (eregi('adview', $image)) return false;
         if (eregi('kapjot', $image)) return false;
         return true;
