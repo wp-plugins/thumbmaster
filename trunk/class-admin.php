@@ -37,7 +37,7 @@ class tt_thumbs {
             'tt_thumbs',
             'option_child'
         ) , 'tt_thumbs_page', 'tt_main_section');        
-        add_settings_field('tt_ttupdate_field', 'Automatic Timthumb update', array(
+        add_settings_field('tt_ttupdate_field', 'Automatic <a href="http://www.binarymoon.co.uk/projects/timthumb/" target="_blank">Timthumb</a> update', array(
             'tt_thumbs',
             'option_ttupdate'
         ) , 'tt_thumbs_page', 'tt_main_section');        
@@ -50,12 +50,12 @@ class tt_thumbs {
     public static function option_resizer($args) {
         $options = tt_thumbs_main::$options;
 ?>
-<input type="radio" name="tt_options[resizer]" value="1" <? echo $options[resizer] == 1 ? 'checked' : '' ?>><? _e('Resize and crop server side (Timthumb)') ?><br>
+<input type="radio" name="tt_options[resizer]" value="1" <? echo $options[resizer] == 1 ? 'checked' : '' ?>><? _e('Resize and crop server side (<a href="http://www.binarymoon.co.uk/projects/timthumb/" target="_blank">Timthumb</a>)') ?><br>
 <input type="radio" name="tt_options[resizer]" value="2" <? echo $options[resizer] == 2 ? 'checked' : '' ?>><? _e('Resize and crop client side (Javascript)') ?><br>
 <input type="radio" name="tt_options[resizer]" value="0" <? echo $options[resizer] == 0 ? 'checked' : '' ?>><? _e('Resize only using width') ?><br>
 <input type="radio" name="tt_options[resizer]" value="3" <? echo $options[resizer] == 3 ? 'checked' : '' ?>><? _e('Resize only using height') ?><br>
 <input type="radio" name="tt_options[resizer]" value="4" <? echo $options[resizer] == 4 ? 'checked' : '' ?>><? _e('Resize only using both dimensions (distorted)') ?><br>
-You may override this setting by adding "tt_resize" class to image attributes in your template to force Timthumb method for maximum compatibility (in Javascript slideshows, etc.)
+You may override this setting by adding "tt_resize" class to image attributes in your template to force <a href="http://www.binarymoon.co.uk/projects/timthumb/" target="_blank">Timthumb</a> method for maximum compatibility (in Javascript slideshows, etc.)
 <?
     }
     public static function option_default_thumb() {
@@ -103,7 +103,7 @@ Select Yes if attached (children) post images also should be checked for missing
                 <? do_settings_sections('tt_thumbs_page'); ?>
 				<input type="submit" name="submitter" value="<?php esc_attr_e('Save Changes') ?>" class="button-primary" />
 			</form>
-            <p><a href="http://wordpress.org/extend/plugins/thumbmaster/" target="_blank">ThumbMaster</a> version: <? echo tt_thumbs_main::version() ?> | <a href="http://www.binarymoon.co.uk/projects/timthumb/" target="_blank">Timthumb</a> version: <? echo tt_thumbs_main::check_timthumb_version() ?> last checked: <? echo gmdate('Y-m-d H:i', tt_thumbs_main::$options[tt_lastcheck] + get_option('gmt_offset') * 3600) ?></p>
+            <p><a href="http://wordpress.org/extend/plugins/thumbmaster/" target="_blank">ThumbMaster</a> version: <? echo tt_thumbs_main::version() ?> | <a href="http://www.binarymoon.co.uk/projects/timthumb/" target="_blank">Timthumb</a> version: <a href="http://code.google.com/p/timthumb/" target="_blank"><? echo tt_thumbs_main::check_timthumb_version() ?></a> last checked: <? echo gmdate('Y-m-d H:i', tt_thumbs_main::$options[tt_lastcheck] + get_option('gmt_offset') * 3600) ?></p>
             <p><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=UV2FDM29SNY6W" target="_blank"><img src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif"></a></p>
 		</div>
 <?
