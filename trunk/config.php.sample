@@ -3,4 +3,3 @@
 
 //thumbmaster config
 define('TIMTHUMB_PATH',get_stylesheet_directory().'/timthumb.php');//absolute path to timthumb.php should be somewhere in wp-content
-define('DISABLE_UPDATE',false);//set true to disable automatic timthumb update
