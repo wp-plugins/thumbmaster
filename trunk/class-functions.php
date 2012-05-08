@@ -106,7 +106,7 @@ class tt_thumbs {
             $meta['height'],
             false
         );
-        if ($sizes = $meta[sizes]) {
+        if ($sizes = $meta['sizes']) {
             if ($dims = $sizes[$size]) if ($dims[file]) return array(
                 str_replace(wp_basename($img_url) , wp_basename($dims[file]) , $img_url) ,
                 $dims[width],
@@ -144,6 +144,7 @@ class tt_thumbs {
         $attachment_id = TT_ATTACHMENT_ID + $object_id;//create a fake id
         self::set_post_thumbnail($object_id, $meta_cache, $attachment_id);
         if (substr(strtolower($src) , 0, 7) == 'http://') { //remote image
+            $width=$height=NULL;
             $mimetype = 'image/';
             if (in_array(strtolower(substr($src, -4)) , array(
                 '.gif',
@@ -268,7 +269,7 @@ class tt_thumbs {
         elseif (!is_object($post)) $post = $GLOBALS['post'];
         $siteurl = get_option('siteurl');
         foreach (self::getimage($post->post_content) as $src) {
-            if (substr(strtolower($src) , 0, strlen('http://' . $_SERVER[HTTP_HOST])) == strtolower('http://' . $_SERVER[HTTP_HOST])) $src = substr($src, strlen('http://' . $_SERVER[HTTP_HOST]));
+            if (substr(strtolower($src) , 0, strlen('http://' . $_SERVER['HTTP_HOST'])) == strtolower('http://' . $_SERVER['HTTP_HOST'])) $src = substr($src, strlen('http://' . $_SERVER['HTTP_HOST']));
             elseif (substr($src, 0, strlen($siteurl)) == $siteurl) $src = substr($src, strlen($siteurl));
             if (substr(strtolower($src) , 0, 8) == 'https://') {
                 continue;
@@ -368,12 +369,13 @@ class tt_thumbs {
         return true;
     }
     function get_youtube($html) {
-        if (!$html) return false;
-        $html = rawurldecode($html);
         $images = array();
-        foreach (self::match_youtube('/youtu\.be\/([^\/\?&#%"\'<> ]*)/i', $html) as $img) if (!in_array($img, $images)) $images[] = $img;
-        foreach (self::match_youtube('/youtube\.com\/watch\?v=([^&#%"\'<> ]*)/i', $html) as $img) if (!in_array($img, $images)) $images[] = $img;
-        foreach (self::match_youtube('/(youtube|ytimg)\.com\/(e|v|embed|vi)\/([^\/\?&#%"\'<> ]*)/i', $html, 3) as $img) if (!in_array($img, $images)) $images[] = $img;
+        if($html) {
+           $html = rawurldecode($html);
+           foreach (self::match_youtube('/youtu\.be\/([^\/\?&#%"\'<> ]*)/i', $html) as $img) if (!in_array($img, $images)) $images[] = $img;
+           foreach (self::match_youtube('/youtube\.com\/watch\?v=([^&#%"\'<> ]*)/i', $html) as $img) if (!in_array($img, $images)) $images[] = $img;
+           foreach (self::match_youtube('/(youtube|ytimg)\.com\/(e|v|embed|vi)\/([^\/\?&#%"\'<> ]*)/i', $html, 3) as $img) if (!in_array($img, $images)) $images[] = $img;
+        }
         return $images;
     }
     function match_youtube($regex, $html, $i = 1) {

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: thumbnails
 Requires at least: 2.9
 Tested up to: 3.3.1
-Stable tag: 0.17
+Stable tag: 0.18
 
 Generates properly formatted post thumbnails on-the-fly for plugins and themes.
 
@@ -15,7 +15,7 @@ Fallback thumbnails, remote images, Youtube videos supported.
 
 = Donations =
 
-If you like and use ThumbMaster you could [consider some donation](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=UV2FDM29SNY6W) to the author's site [JEWPI.COM](http://www.jewpi.com/).
+If you like and use ThumbMaster you could [consider some donation](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=UV2FDM29SNY6W) to the author.
 
 == Installation ==
 
@@ -34,6 +34,9 @@ Admin options will appear as `Thumbnail` menu item in `Appearance` section on yo
 1. Admin panel
 
 == Changelog ==
+
+= 0.18 =
+* 2012-05-08 Minor bug fixes
 
 = 0.17 =
 * 2012-02-23 Minor bug fixes

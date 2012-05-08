@@ -1,16 +1,16 @@
 <?
 /*
 Plugin Name: ThumbMaster
-Version: 0.17
+Version: 0.18
 Plugin URI: http://wordpress.org/extend/plugins/thumbmaster/
 Description: Generates properly formatted post thumbnails on-the-fly for plugins and themes. Fallback thumbnails, external images, Youtube videos supported.
 Author: Nathan Schlesinger
 Author URI: http://www.jewpi.com/
 */
 
-if(!function_exists(rrmdir)) {function rrmdir($path) { return is_file($path) ? @unlink($path) : array_map('rrmdir',glob($path.'/*'))==@rmdir($path);}}
+if(!function_exists('rrmdir')) {function rrmdir($path) { return is_file($path) ? @unlink($path) : array_map('rrmdir',glob($path.'/*'))==@rmdir($path);}}
 
-if(!class_exists(tt_thumbs_main)) {
+if(!class_exists('tt_thumbs_main')) {
 class tt_thumbs_main {
     public static $options = '';
     function __construct() {
@@ -25,12 +25,12 @@ class tt_thumbs_main {
         self::$options = array_merge($default_options,get_option('tt_options',$default_options));
         $config = dirname(__FILE__) . '/config.php';
         if (file_exists($config)) require_once ($config);
-        if (!defined(TIMTHUMB_PATH)) define('TIMTHUMB_PATH', dirname(__FILE__) . '/t.php');
+        if (!defined('TIMTHUMB_PATH')) define('TIMTHUMB_PATH', dirname(__FILE__) . '/t.php');
         define('TT_DEFAULT_THUMB','ttDefault.jpg');
         define('TT_TIMTHUMB', (substr(TIMTHUMB_PATH, 0, strlen(WP_CONTENT_DIR)) == WP_CONTENT_DIR) ? TIMTHUMB_PATH : dirname(__FILE__) . '/t.php');
         define('TT_TIMTHUMB_URL', WP_CONTENT_URL . substr(TT_TIMTHUMB, strlen(WP_CONTENT_DIR)));
         define('TT_TIMTHUMB_CACHE_DIR',WP_CONTENT_DIR.'/timthumb-cache');
-        if (!function_exists(has_post_thumbnail)) add_theme_support('post-thumbnails');
+        if (!function_exists('has_post_thumbnail')) add_theme_support('post-thumbnails');
         if (strpos(dirname(__FILE__) , WP_PLUGIN_DIR) !== false) {//check if running as plugin or template addon
             register_activation_hook(__FILE__, array(
                 'tt_thumbs_main',
