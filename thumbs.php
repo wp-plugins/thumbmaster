@@ -1,7 +1,7 @@
 <?
 /*
 Plugin Name: ThumbMaster
-Version: 0.18
+Version: 0.19
 Plugin URI: http://wordpress.org/extend/plugins/thumbmaster/
 Description: Generates properly formatted post thumbnails on-the-fly for plugins and themes. Fallback thumbnails, external images, Youtube videos supported.
 Author: Nathan Schlesinger
@@ -70,7 +70,7 @@ class tt_thumbs_main {
         if (!$ttversion || (self::$options['ttupdate'] && (($force && self::$options['tt_lastcheck'] < time() - 3600) || self::$options['tt_lastcheck'] < time() - 24 * 3600))) { //check daily
             if ($cont = self::file_read('http://timthumb.googlecode.com/svn/trunk/timthumb.php')) {
                 preg_match("~define\s*\(\s*[\'|\"]VERSION[\'|\"],\s*[\'|\"]([^\'|\"]*)~", $cont, $match);
-                if ($match[1]) if ($ttversion < $match[1]) { //higher version found
+                if ($match[1]) if (self::versioncheck($match[1],$ttversion)) { //higher version found
 /*
                     $cont=strtr($cont,array(//patch
                        'if(NOT_FOUND_IMAGE && $this->is404()){' => 'if(NOT_FOUND_IMAGE && $this->is404()){ if($_GET["src"]!=NOT_FOUND_IMAGE) {$_GET["src"]=NOT_FOUND_IMAGE;return $this->start();}',
@@ -88,6 +88,14 @@ class tt_thumbs_main {
         $config = dirname(__FILE__) . '/config.php';
         if ($force || !file_exists($ttconfig) || (file_exists($config) && file_exists($ttconfig) && @filemtime($config) > @filemtime($ttconfig))) self::update_ttconfig();
         return $ttversion;
+    }
+    public static function versioncheck($latest,$current) {
+       $latestar=explode('.',$latest);
+       $currentar=explode('.',$current);
+       for($i=0;$i<count($latestar);$i++) {
+          if($latestar[$i]>$currentar[$i]) return true;
+          elseif($latestar[$i]<$currentar[$i]) return false;
+       }
     }
     public static function file_read($url,$timeout=10) {
        $parts=parse_url($url);
