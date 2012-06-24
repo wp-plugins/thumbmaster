@@ -1,7 +1,7 @@
 <?
 /*
 Plugin Name: ThumbMaster
-Version: 0.19
+Version: 0.20
 Plugin URI: http://wordpress.org/extend/plugins/thumbmaster/
 Description: Generates properly formatted post thumbnails on-the-fly for plugins and themes. Fallback thumbnails, external images, Youtube videos supported.
 Author: Nathan Schlesinger
@@ -30,7 +30,7 @@ class tt_thumbs_main {
         define('TT_TIMTHUMB', (substr(TIMTHUMB_PATH, 0, strlen(WP_CONTENT_DIR)) == WP_CONTENT_DIR) ? TIMTHUMB_PATH : dirname(__FILE__) . '/t.php');
         define('TT_TIMTHUMB_URL', WP_CONTENT_URL . substr(TT_TIMTHUMB, strlen(WP_CONTENT_DIR)));
         define('TT_TIMTHUMB_CACHE_DIR',WP_CONTENT_DIR.'/timthumb-cache');
-        if (!function_exists('has_post_thumbnail')) add_theme_support('post-thumbnails');
+        add_theme_support('post-thumbnails');
         if (strpos(dirname(__FILE__) , WP_PLUGIN_DIR) !== false) {//check if running as plugin or template addon
             register_activation_hook(__FILE__, array(
                 'tt_thumbs_main',

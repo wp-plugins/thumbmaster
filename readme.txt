@@ -3,8 +3,8 @@ Contributors: jewpi
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=UV2FDM29SNY6W
 Tags: thumbnails
 Requires at least: 2.9
-Tested up to: 3.3.2
-Stable tag: 0.19
+Tested up to: 3.4
+Stable tag: 0.20
 
 Generates properly formatted post thumbnails on-the-fly for plugins and themes.
 
@@ -34,6 +34,9 @@ Admin options will appear as `Thumbnail` menu item in `Appearance` section on yo
 1. Admin panel
 
 == Changelog ==
+
+= 0.20 =
+* 2012-06-24 WP 3.4 compatibility
 
 = 0.19 =
 * 2012-05-08 Timthumb version check improvement
