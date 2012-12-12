@@ -236,6 +236,14 @@ class tt_thumbs {
         $siteurl = get_option('siteurl');
         if (substr($img_url, 0, strlen($_SERVER['HTTP_HOST']) + 7) == 'http://' . $_SERVER['HTTP_HOST']) $img_url = self::mu_path(substr($img_url, strlen($_SERVER['HTTP_HOST']) + 7));
         elseif (substr($img_url, 0, strlen($siteurl)) == $siteurl) $img_url = self::mu_path(substr($img_url, strlen($siteurl)));
+        if(substr($img_url, 0, 7) != 'http://') {
+           $img_path=substr($img_url,0,strrpos($img_url,'.')).'-'.$width.'x'.$height.substr($img_url,strrpos($img_url,'.'));
+           if(file_exists(ABSPATH.$img_path)) return self::path2url($img_path);
+           if($pos=strrpos($img_url,'-')) {
+              $img_path=substr($img_url,0,$pos).'-'.$width.'x'.$height.substr($img_url,strrpos($img_url,'.'));
+              if(file_exists(ABSPATH.$img_path)) return self::path2url($img_path);
+           }
+        }
         $img_url = TT_TIMTHUMB_URL . '?src=' . (substr($img_url, 0, 7) == 'http://' ? urlencode($img_url) : $img_url) . '&amp;w=' . $width . '&amp;h=' . $height . '&amp;zc=1';
         return $img_url;
     }
@@ -288,12 +296,16 @@ class tt_thumbs {
        $parts = parse_url($paths['baseurl']);
        if ($src[0] != '/') $src = '/' . $src;
        if(substr($src,0,strlen($parts['path']))==$parts['path']) $src = substr($paths['basedir'].substr($src,strlen($parts['path'])), strlen(ABSPATH) - 1);
-/*
-        $imageParts = explode('/files/', $src);
-        if (isset($imageParts[1])) $src = substr(WP_CONTENT_DIR . '/blogs.dir/' . $GLOBALS[blog_id] . '/files/' . $imageParts[1], strlen(ABSPATH) - 1);
-        elseif ($src[0] != '/') $src = '/' . $src;
-*/
-        return $src;
+       return $src;
+    }
+    function path2url($src) {
+       static $paths;
+       if(!isset($paths)) $paths=wp_upload_dir();
+       if ($src[0] != '/') $src = '/' . $src;
+       $basepath=substr($paths['basedir'],strlen(ABSPATH)-1);
+       if(substr($src,0,strlen($basepath))==$basepath) $src = $paths['baseurl'].substr($src,strlen($basepath));
+       else $src=get_option('siteurl').$src;
+       return $src;
     }
     function get_size($size = 'thumbnail') {
         global $_wp_additional_image_sizes;
@@ -372,9 +384,11 @@ class tt_thumbs {
         $images = array();
         if($html) {
            $html = rawurldecode($html);
-           foreach (self::match_youtube('/youtu\.be\/([^\/\?&#%"\'<> ]*)/i', $html) as $img) if (!in_array($img, $images)) $images[] = $img;
-           foreach (self::match_youtube('/youtube\.com\/watch\?v=([^&#%"\'<> ]*)/i', $html) as $img) if (!in_array($img, $images)) $images[] = $img;
-           foreach (self::match_youtube('/(youtube|ytimg)\.com\/(e|v|embed|vi)\/([^\/\?&#%"\'<> ]*)/i', $html, 3) as $img) if (!in_array($img, $images)) $images[] = $img;
+//           foreach (self::match_youtube('/youtu\.be\/([^\/\?&#%"\'<> ]*)/i', $html) as $img) if (!in_array($img, $images)) $images[] = $img;
+//           foreach (self::match_youtube('/youtube\.com\/watch\?v=([^&#%"\'<> ]*)/i', $html) as $img) if (!in_array($img, $images)) $images[] = $img;
+           foreach (self::match_youtube('/(youtube\.com\/watch(.*)?[\?\&]v=|youtu\.be\/)([a-zA-Z0-9-_]+)/i', $html,3) as $img) if (!in_array($img, $images)) $images[] = $img;
+//           foreach (self::match_youtube('/(youtube|ytimg)\.com\/(e|v|embed|vi)\/([^\/\?&#%"\'<> ]*)/i', $html, 3) as $img) if (!in_array($img, $images)) $images[] = $img;
+           foreach (self::match_youtube('/(youtube|ytimg)\.com\/(e|v|embed|vi)\/([a-zA-Z0-9-_]+)/i', $html, 3) as $img) if (!in_array($img, $images)) $images[] = $img;
         }
         return $images;
     }
