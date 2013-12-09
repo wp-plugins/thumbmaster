@@ -200,6 +200,7 @@ class tt_thumbs {
     }
     function post_thumbnail_html($html, $post_id, $post_thumbnail_id, $size, $attr) {
         list($size, $width, $height) = self::get_size($size);
+        if(!is_array($attr)) $attr=array();
         if (strpos($attr['class'], 'tt_resize') !== false) { //"tt_resize" class
             //      $html=preg_replace( '/(width|height)=\"\d*\"\s/i', "", $html );//remove dimension attributes
             if (TT_RESIZER != 1) { //force timthumb
